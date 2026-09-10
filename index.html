@@ -23,10 +23,12 @@
   --rose: #c45b63;
   --line: rgba(42,36,31,.08);
   --shadow: 0 4px 18px rgba(42,36,31,.06);
+  --shadow-hover: 0 10px 28px rgba(42,36,31,.1);
   --font: "Fredoka", system-ui, sans-serif;
   --display: "Baloo 2", "Fredoka", system-ui, sans-serif;
   --hand: "Caveat", cursive;
   --ease: cubic-bezier(.25,.1,.25,1);
+  --ease-out: cubic-bezier(.16,1,.3,1);
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -42,6 +44,8 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   outline: 2px solid var(--rose);
   outline-offset: 3px;
 }
+
+/* Nav */
 .nav {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -50,21 +54,25 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   justify-content: space-between;
   align-items: center;
   padding: 12px 20px;
+  padding-top: max(12px, env(safe-area-inset-top));
   background: rgba(232,223,210,.94);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--line);
+  transition: background .3s var(--ease);
 }
 .logo {
   font-family: var(--hand);
-  font-size: 24px;
+  font-size: clamp(20px, 4vw, 24px);
   font-weight: 700;
   color: var(--ink);
   text-decoration: none;
   display: flex;
   align-items: center;
   gap: 4px;
+  transition: opacity .25s var(--ease);
 }
+.logo:hover { opacity: .85; }
 .logo svg { width: 17px; height: 17px; stroke: var(--rose); fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .nav-right { display: flex; align-items: center; gap: 14px; }
 .nav-links { display: flex; gap: 18px; list-style: none; }
@@ -74,7 +82,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   color: var(--ink);
   text-decoration: none;
   opacity: .65;
-  transition: opacity .2s;
+  transition: opacity .25s var(--ease), color .25s var(--ease);
 }
 .nav-links a:hover,
 .nav-links a.active { opacity: 1; color: var(--rose); }
@@ -87,11 +95,17 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   background: var(--rose);
   color: #fff;
   text-decoration: none;
-  transition: transform .2s var(--ease);
+  transition: transform .25s var(--ease-out), box-shadow .25s var(--ease);
 }
-.nav-contact:hover { transform: translateY(-1px); }
+.nav-contact:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(196,91,99,.3);
+}
+
+/* Hero */
 .hero {
   padding: 110px 24px 48px;
+  padding-top: max(110px, calc(70px + env(safe-area-inset-top)));
 }
 .hero-inner {
   max-width: 900px;
@@ -99,21 +113,22 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 32px 56px;
+  gap: clamp(20px, 5vw, 56px);
   flex-wrap: wrap;
 }
 .hero-visual {
   position: relative;
   flex-shrink: 0;
-  width: clamp(160px, 30vw, 220px);
+  width: clamp(150px, 28vw, 220px);
   margin-top: 12px;
 }
 .snoopy {
   width: 100%;
   height: auto;
   display: block;
-  background: transparent;
+  transition: transform .45s var(--ease-out);
 }
+.hero-visual:hover .snoopy { transform: scale(1.04); }
 .bubble {
   position: absolute;
   top: -28%;
@@ -134,7 +149,9 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   z-index: 3;
   pointer-events: none;
   transform: rotate(-3deg);
+  transition: transform .4s var(--ease-out);
 }
+.hero-visual:hover .bubble { transform: rotate(-1deg) translateY(-3px); }
 .bubble-icon {
   display: block;
   width: 13px;
@@ -165,7 +182,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
 }
 .hero-copy h1 {
   font-family: var(--display);
-  font-size: clamp(28px, 5vw, 40px);
+  font-size: clamp(28px, 5.2vw, 40px);
   font-weight: 800;
   line-height: 1.12;
   letter-spacing: -0.3px;
@@ -173,12 +190,16 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
 }
 .hero-copy h1 span { color: var(--rose); }
 .hero-copy p {
-  font-size: clamp(14.5px, 2vw, 16px);
+  font-size: clamp(14.5px, 2.1vw, 16px);
   color: var(--muted);
   line-height: 1.55;
 }
-.section { padding: 44px 20px; }
+
+/* Sections */
+.section { padding: clamp(36px, 6vw, 52px) 20px; }
 .section-inner { max-width: 520px; margin: 0 auto; }
+
+/* Inside */
 .inside-layout {
   display: flex;
   flex-direction: column;
@@ -202,7 +223,9 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   overflow: hidden;
   background: #ddd4c6;
   box-shadow: var(--shadow);
+  transition: box-shadow .35s var(--ease);
 }
+.slideshow:hover { box-shadow: var(--shadow-hover); }
 .slideshow img {
   position: absolute;
   inset: 0;
@@ -210,25 +233,26 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   height: 100%;
   object-fit: contain;
   opacity: 0;
-  transition: opacity .45s ease;
+  transition: opacity .55s var(--ease);
   background: #ddd4c6;
 }
 .slideshow img.active { opacity: 1; }
 .slideshow-dots {
   display: flex;
   justify-content: center;
-  gap: 5px;
-  margin-top: 10px;
+  gap: 6px;
+  margin-top: 12px;
 }
 .slideshow-dots span {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: rgba(42,36,31,.18);
   cursor: pointer;
-  transition: background .2s;
+  transition: background .25s var(--ease), transform .25s var(--ease-out);
 }
-.slideshow-dots span.active { background: var(--rose); }
+.slideshow-dots span:hover { transform: scale(1.25); }
+.slideshow-dots span.active { background: var(--rose); transform: scale(1.15); }
 .feature-list {
   display: flex;
   flex-direction: column;
@@ -239,7 +263,9 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   display: flex;
   gap: 12px;
   align-items: flex-start;
+  transition: transform .3s var(--ease-out);
 }
+.feature:hover { transform: translateX(5px); }
 .feature-icon {
   flex-shrink: 0;
   width: 38px;
@@ -248,6 +274,11 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   place-items: center;
   border-radius: 10px;
   background: rgba(196,91,99,.1);
+  transition: background .3s var(--ease), transform .3s var(--ease-out);
+}
+.feature:hover .feature-icon {
+  background: rgba(196,91,99,.18);
+  transform: scale(1.06);
 }
 .feature-icon svg {
   width: 17px;
@@ -269,16 +300,23 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   color: var(--muted);
   line-height: 1.4;
 }
+
+/* Product */
 .product-wrap {
-  max-width: 280px;
+  max-width: 300px;
   margin: 0 auto;
 }
 .product-card {
   background: var(--surface);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: var(--shadow);
+  box-shadow: 0 6px 22px rgba(42,36,31,.08);
   border: 1px solid var(--line);
+  transition: transform .4s var(--ease-out), box-shadow .4s var(--ease);
+}
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 36px rgba(42,36,31,.12);
 }
 .card-img {
   position: relative;
@@ -294,7 +332,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   height: 100%;
   object-fit: contain;
   opacity: 0;
-  transition: opacity .45s ease;
+  transition: opacity .55s var(--ease);
   background: #e0d6c8;
 }
 .card-img img.active { opacity: 1; }
@@ -307,10 +345,12 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   font-family: var(--display);
   font-size: 13px;
   font-weight: 700;
-  padding: 4px 11px;
+  padding: 5px 11px;
   border-radius: 16px;
   z-index: 2;
+  transition: transform .3s var(--ease-out);
 }
+.product-card:hover .price { transform: scale(1.06); }
 .card-dots {
   position: absolute;
   bottom: 12px;
@@ -318,58 +358,67 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   right: 0;
   display: flex;
   justify-content: center;
-  gap: 5px;
+  gap: 6px;
   z-index: 2;
 }
 .card-dots span {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: rgba(255,255,255,.5);
+  background: rgba(255,255,255,.45);
   cursor: pointer;
-  transition: background .2s, transform .2s;
+  transition: background .25s var(--ease), transform .25s var(--ease-out);
 }
+.card-dots span:hover { transform: scale(1.25); }
 .card-dots span.active {
   background: #fff;
-  transform: scale(1.15);
+  transform: scale(1.2);
 }
-.card-body { padding: 16px; }
+.card-body {
+  padding: 18px 16px 16px;
+  text-align: center;
+}
 .card-body h3 {
   font-family: var(--display);
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 700;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
+  line-height: 1.25;
 }
 .card-body .desc {
   font-size: 13px;
   color: var(--muted);
-  margin-bottom: 12px;
-  line-height: 1.4;
+  margin-bottom: 14px;
+  line-height: 1.45;
 }
 .card-features {
   list-style: none;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
+  display: grid;
+  gap: 6px;
+  text-align: left;
 }
 .card-features li {
   font-size: 13px;
   font-weight: 500;
-  padding: 3px 0;
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
+  transition: transform .25s var(--ease-out);
 }
+.card-features li:hover { transform: translateX(4px); }
 .card-features li::before {
   content: "";
   width: 13px;
   height: 13px;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c45b63' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center/contain no-repeat;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c45b63' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center/contain no-repeat;
   flex-shrink: 0;
 }
 .btn {
   font-family: var(--display);
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 600;
-  padding: 11px 16px;
+  padding: 12px 16px;
   border-radius: 22px;
   border: none;
   cursor: pointer;
@@ -377,80 +426,119 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
   width: 100%;
   background: var(--rose);
   color: #fff;
-  transition: transform .2s var(--ease);
+  transition: transform .3s var(--ease-out), box-shadow .3s var(--ease);
+  box-shadow: 0 3px 12px rgba(196,91,99,.3);
 }
-.btn:hover { transform: translateY(-1px); }
-.btn svg {
-  width: 14px;
-  height: 14px;
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 20px rgba(196,91,99,.4);
 }
-.compat-card {
-  max-width: 380px;
+
+/* Compat */
+.compat-title {
+  font-family: var(--display);
+  font-size: clamp(20px, 4.2vw, 24px);
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 6px;
+}
+.compat-sub {
+  text-align: center;
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 22px;
+  line-height: 1.45;
+}
+.compat-grid {
+  max-width: 420px;
   margin: 0 auto;
-  background: var(--surface);
-  border-radius: 14px;
-  padding: 6px;
-  border: 1px solid var(--line);
-  box-shadow: var(--shadow);
-}
-.compat-row {
   display: flex;
+  flex-direction: column;
   gap: 12px;
+}
+.compat-item {
+  display: flex;
+  gap: 14px;
   align-items: flex-start;
-  padding: 12px 14px;
-  border-radius: 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: var(--shadow);
+  transition: transform .35s var(--ease-out), box-shadow .35s var(--ease);
+}
+.compat-item:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
 }
 .compat-icon {
   flex-shrink: 0;
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   display: grid;
   place-items: center;
-  border-radius: 50%;
-  background: rgba(196,91,99,.08);
+  border-radius: 12px;
+  background: rgba(196,91,99,.1);
+  transition: background .3s var(--ease), transform .3s var(--ease-out);
+}
+.compat-item:hover .compat-icon {
+  background: rgba(196,91,99,.18);
+  transform: scale(1.06);
 }
 .compat-icon svg {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   stroke: var(--rose);
   fill: none;
   stroke-width: 1.6;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-.compat-row h4 {
+.compat-item h4 {
   font-family: var(--display);
-  font-size: 14.5px;
+  font-size: 15.5px;
   font-weight: 700;
-  margin-bottom: 2px;
+  margin-bottom: 3px;
 }
-.compat-row p {
-  font-size: 12.5px;
+.compat-item p {
+  font-size: 13.5px;
   color: var(--muted);
-  line-height: 1.4;
+  line-height: 1.45;
 }
+@media (min-width: 480px) {
+  .compat-grid {
+    flex-direction: row;
+    gap: 14px;
+  }
+  .compat-item {
+    flex: 1;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    padding: 20px 16px;
+  }
+  .compat-icon { margin-bottom: 4px; }
+}
+
+/* FAQ */
 .faq-list {
   max-width: 420px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 8px;
 }
 .faq-item {
   background: var(--surface);
   border-radius: 11px;
   border: 1px solid var(--line);
   overflow: hidden;
+  transition: box-shadow .3s var(--ease);
 }
+.faq-item:hover { box-shadow: 0 4px 14px rgba(42,36,31,.06); }
 .faq-item summary {
   font-family: var(--display);
   font-size: 14.5px;
@@ -463,7 +551,9 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   align-items: center;
   gap: 10px;
   user-select: none;
+  transition: color .25s var(--ease);
 }
+.faq-item summary:hover { color: var(--rose); }
 .faq-item summary::-webkit-details-marker { display: none; }
 .faq-item summary::after {
   content: "+";
@@ -471,14 +561,20 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   font-weight: 500;
   color: var(--rose);
   flex-shrink: 0;
+  transition: transform .3s var(--ease-out);
 }
-.faq-item[open] summary::after { content: "−"; }
+.faq-item[open] summary::after {
+  content: "−";
+  transform: rotate(180deg);
+}
 .faq-item .answer {
-  padding: 0 15px 13px;
+  padding: 0 15px 14px;
   font-size: 13.5px;
   color: var(--muted);
   line-height: 1.5;
 }
+
+/* Contact */
 .contact-card {
   max-width: 360px;
   margin: 0 auto;
@@ -488,10 +584,15 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   text-align: center;
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
+  transition: transform .4s var(--ease-out), box-shadow .4s var(--ease);
+}
+.contact-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
 }
 .contact-card h2 {
   font-family: var(--display);
-  font-size: 24px;
+  font-size: clamp(22px, 4vw, 24px);
   font-weight: 700;
   margin-bottom: 8px;
 }
@@ -501,8 +602,11 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   margin-bottom: 18px;
   line-height: 1.5;
 }
+
+/* Footer */
 .footer {
   padding: 32px 20px 44px;
+  padding-bottom: max(44px, env(safe-area-inset-bottom));
   text-align: center;
   border-top: 1px solid var(--line);
 }
@@ -514,7 +618,9 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   align-items: center;
   gap: 4px;
   margin-bottom: 4px;
+  transition: opacity .25s var(--ease);
 }
+.footer .brand:hover { opacity: .8; }
 .footer .brand svg {
   width: 15px;
   height: 15px;
@@ -528,6 +634,8 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   font-size: 12.5px;
   color: var(--muted);
 }
+
+/* Mobile menu */
 .mobile-toggle { display: none; }
 @media (max-width: 720px) {
   .hero-inner {
@@ -535,9 +643,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
     text-align: center;
     gap: 20px;
   }
-  .hero-copy {
-    max-width: 340px;
-  }
+  .hero-copy { max-width: 340px; }
   .hero-visual {
     width: clamp(150px, 44vw, 190px);
     margin-top: 24px;
@@ -545,7 +651,6 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
   .bubble {
     top: -32%;
     right: -12%;
-    left: auto;
     width: 58%;
     min-width: 105px;
     transform: rotate(2deg);
@@ -561,7 +666,9 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
     border-radius: 50%;
     background: var(--surface);
     border: 1px solid var(--line);
+    transition: background .25s var(--ease);
   }
+  .mobile-toggle:hover { background: #ebe4d9; }
   .mobile-toggle svg {
     width: 16px;
     height: 16px;
@@ -590,17 +697,32 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
     font-size: 11px;
   }
 }
+
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
   .slideshow img,
-  .card-img img { transition: none; }
+  .card-img img,
+  .product-card,
+  .compat-item,
+  .feature,
+  .btn,
+  .nav-contact,
+  .contact-card,
+  .snoopy,
+  .bubble { transition: none; }
 }
 </style>
 </head>
 <body>
 <nav class="nav">
-  <a href="#" class="logo">
+  <a href="#top" class="logo">
     DearKey
-    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
   </a>
   <div class="nav-right">
     <ul class="nav-links" id="navLinks">
@@ -615,21 +737,23 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
     <a href="#contact" class="nav-contact">Message us</a>
   </div>
 </nav>
+
 <section class="hero" id="top">
   <div class="hero-inner">
     <div class="hero-visual">
       <img class="snoopy" src="https://files.catbox.moe/r1nkda.png" alt="DearKey" width="220" height="220" loading="eager" decoding="async">
       <div class="bubble">
         <svg class="bubble-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-        Looking for a gift? Meet DearKey — a keychain with a Twist.
+        Looking for a gift? Meet DearKey — a keychain with a twist.
       </div>
     </div>
     <div class="hero-copy">
       <h1>Keychains with a <span>Twist</span></h1>
-      <p>Create personalized keychains that play your favorite songs, display your photos, and carry your messages.</p>
+      <p>Create personalized keychains that play your favorite songs, show your photos, and carry your messages.</p>
     </div>
   </div>
 </section>
+
 <section class="section" id="inside">
   <div class="section-inner">
     <div class="inside-layout">
@@ -673,6 +797,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
     </div>
   </div>
 </section>
+
 <section class="section" id="products">
   <div class="section-inner">
     <div class="product-wrap">
@@ -689,48 +814,47 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
           </div>
         </div>
         <div class="card-body">
-          <h3>DearKey Available Now</h3>
-          <p class="desc">The keychain that plays your song, shows your photos, and carries your message.</p>
           <ul class="card-features">
-            <li>Fits wallet & ID</li>
-            <li>Up to 3–5 photos</li>
+            <li>Song plays on NFC tap</li>
+            <li>3–5 photos</li>
             <li>Custom message</li>
-            <li>Custom song</li>
+            <li>For wallet & keys</li>
             <li>Size ≈ 20-peso coin</li>
           </ul>
-          <a href="#contact" class="btn">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-            Get Yours — ₱130
-          </a>
+          <a href="#contact" class="btn">Get yours</a>
         </div>
       </div>
     </div>
   </div>
 </section>
+
 <section class="section" id="compat">
   <div class="section-inner">
-    <div class="compat-card">
-      <div class="compat-row">
+    <h2 class="compat-title">Does it work with your phone?</h2>
+    <p class="compat-sub">Most modern phones support NFC.</p>
+    <div class="compat-grid">
+      <div class="compat-item">
         <div class="compat-icon">
           <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>
         </div>
         <div>
           <h4>iPhone</h4>
-          <p>iPhone XS and newer with iOS 17+ work with a tap. Older models may need a quick extra step.</p>
+          <p>iPhone XS and newer with iOS 17+ — just tap. Older models may need one extra step.</p>
         </div>
       </div>
-      <div class="compat-row">
+      <div class="compat-item">
         <div class="compat-icon">
           <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M10 18h4"/><circle cx="12" cy="12" r="2.5"/></svg>
         </div>
         <div>
           <h4>Android</h4>
-          <p>Most recent phones support it. Check Settings → Connected devices to confirm NFC is on.</p>
+          <p>Most recent phones work. Turn on NFC in Settings → Connected devices.</p>
         </div>
       </div>
     </div>
   </div>
 </section>
+
 <section class="section" id="faq">
   <div class="section-inner">
     <div class="faq-list">
@@ -744,11 +868,11 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
       </details>
       <details class="faq-item">
         <summary>How long can the message be?</summary>
-        <div class="answer">Up to 200 words. Short phrases or longer notes both work well.</div>
+        <div class="answer">It depends on you. Short phrases or longer notes both work well.</div>
       </details>
       <details class="faq-item">
         <summary>Can I preview before it’s made?</summary>
-        <div class="answer">Yes. After you send details we share a simple preview so you can confirm the layout.</div>
+        <div class="answer">Yes. After you send the details, we share a simple preview so you can confirm the layout.</div>
       </details>
       <details class="faq-item">
         <summary>What if it breaks or stops working?</summary>
@@ -757,25 +881,27 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
     </div>
   </div>
 </section>
+
 <section class="section" id="contact">
   <div class="section-inner">
     <div class="contact-card">
       <h2>Want one?</h2>
-      <p>Message us on Instagram with your photos, message, and song. We’ll confirm details and guide payment & shipping.</p>
+      <p>Message us on Instagram with your photos, message, and song. We’ll confirm the details and guide you through payment and shipping.</p>
       <a href="https://instagram.com/dearkey.ph" class="btn" target="_blank" rel="noopener noreferrer">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>
         Message on Instagram
       </a>
     </div>
   </div>
 </section>
+
 <footer class="footer">
   <div class="brand">
     DearKey
-    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
   </div>
   <p>tiny keepsakes, made with care</p>
 </footer>
+
 <script>
 (function () {
   "use strict";
@@ -803,6 +929,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
       if (e.key === "Escape") closeMenu();
     });
   }
+
   const sections = document.querySelectorAll("section[id]");
   const linkEls = document.querySelectorAll(".nav-links a");
   let ticking = false;
@@ -821,7 +948,9 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
       ticking = true;
     }
   }, { passive: true });
+
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   function initSlideshow(containerSel, dotsSel, interval) {
     const slides = document.querySelectorAll(containerSel + " img");
     const dots = document.querySelectorAll(dotsSel + " span");
@@ -829,21 +958,24 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
     let timer = null;
     const total = slides.length;
     if (!total) return;
+
     function show(i) {
       slides.forEach((img, idx) => img.classList.toggle("active", idx === i));
       dots.forEach((dot, idx) => dot.classList.toggle("active", idx === i));
       current = i;
     }
+
     dots.forEach((dot) => {
-      dot.addEventListener("click", () => { show(+dot.dataset.index); restart(); });
+      const go = () => { show(+dot.dataset.index); restart(); };
+      dot.addEventListener("click", go);
       dot.addEventListener("keydown", (e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          show(+dot.dataset.index);
-          restart();
+          go();
         }
       });
     });
+
     function tick() { show((current + 1) % total); }
     function start() {
       if (reduceMotion || timer) return;
@@ -854,11 +986,13 @@ a:focus-visible, button:focus-visible, summary:focus-visible {
       timer = null;
     }
     function restart() { stop(); start(); }
+
     start();
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) stop(); else start();
     });
   }
+
   initSlideshow("#productSlideshow", "#slideshowDots", 3400);
   initSlideshow("#cardSlideshow", "#cardDots", 3000);
 })();
